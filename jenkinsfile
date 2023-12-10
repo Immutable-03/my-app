@@ -7,6 +7,8 @@ pipeline{
             steps{
                 sh 'npm install 20'
                 sh 'npm audit fix --force'
+                sh 'npm audit fix'
+                echo 'success'
             }
         }
 
@@ -14,6 +16,7 @@ pipeline{
 
             steps{
                  sh 'npm run dev'
+                 echo 'success'
             }
         }
 
