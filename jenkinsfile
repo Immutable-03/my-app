@@ -5,6 +5,7 @@ pipeline{
 
         stage('build'){
             steps{
+                sh 'rm -rf node_modules'
                 sh 'npm audit fix'
                 sh 'npm install 20'
 
