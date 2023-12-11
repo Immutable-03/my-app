@@ -9,7 +9,7 @@ pipeline{
                 sh 'npm install 20'
                 sh 'npm audit'
                 sh 'npm audit fix --force'
-                sh 'npm run dev'
+                sh 'npm test'
 
                 echo 'success'
             }
