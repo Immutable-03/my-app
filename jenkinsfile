@@ -1,33 +1,83 @@
-pipeline{
-    //Directives
-   agent any
+pipeline {
+    // Directives
+    agent any
+
     stages {
-        stage('build'){
-            steps{
-                sh 'rm -rf node_modules'
-                sh 'npm audit fix --force'
-                sh 'npm install 20'
-                sh 'npm audit fix --force'
-
-                echo 'success'
-            }
-        }
-
-        stage ('test'){
-
-            steps{
-                 sh 'npm run dev'
-                 echo 'success'
-            }
-        }
-
-        stage ('deploy'){
-
+        stage('build') {
             steps {
-                 echo "deploying"
+                // Remove existing node_modules directory
+                sh 'rm -rf node_modules'
+
+                // Run npm audit fix with force option
+                sh 'npm audit fix --force'
+
+                // Install project dependencies
+                sh 'npm install'
+
+                // Run npm audit fix again
+                sh 'npm audit fix --force'
+
+                // Echo success message
+                echo 'Build success'
             }
-        } 
+        }
 
+        stage('test') {
+            steps {
+                // Run npm run dev for testing
+                sh 'npm run dev'
+
+                // Echo success message
+                echo 'Test success'
+            }
+        }
+
+        stage('deploy') {
+            steps {
+                // Deployment steps go here
+                echo 'Deploying'
+            }
+        }
     }
-
 }
+
+
+
+
+
+
+
+
+
+// pipeline{
+//     //Directives
+//    agent any
+//     stages {
+//         stage('build'){
+//             steps{
+//                 sh 'rm -rf node_modules'
+//                 sh 'npm audit fix --force'
+//                 sh 'npm install 20'
+//                 sh 'npm audit fix --force'
+//                 echo 'success'
+//             }
+//         }
+
+//         stage ('test'){
+
+//             steps{
+//                  sh 'npm run dev'
+//                  echo 'success'
+//             }
+//         }
+
+//         stage ('deploy'){
+
+//             steps {
+//                  echo "deploying"
+//             }
+//         } 
+
+//     }
+
+// }
