@@ -24,13 +24,14 @@ pipeline {
 
                 // Echo success message
                 echo 'Build success'
+                sh 'npm run dev'
             }
         }
 
         stage('test') {
             steps {
                 // Run npm run dev for testing
-                sh 'npm run dev'
+                // sh 'npm run dev'
 
                 // Echo success message
                 echo 'Test success'
