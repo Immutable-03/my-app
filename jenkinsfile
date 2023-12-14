@@ -1,4 +1,5 @@
 pipeline {
+    // Directives
     agent any
 
     environment {
@@ -6,25 +7,40 @@ pipeline {
     }
 
     stages {
-        stage('Install and Build') {
+        stage('build') {
             steps {
-                 sh 'rm -rf node_modules'
-                 sh 'npm audit fix --force'
-                 sh 'npm install 20'
-                 sh 'npm audit fix --force'
-                 echo 'success'
+                // Remove existing node_modules directory
+                sh 'rm -rf node_modules'
+
+                // Run npm audit fix with force option
+                sh 'npm audit fix --force'
+
+                // Install project dependencies
+                sh 'npm install'
+
+                // Run npm audit fix again
+                sh 'npm audit fix --force'
+
+                // Echo success message
+                echo 'Build success'
             }
         }
 
-        stage ('test'){
+        stage('test') {
+            steps {
+                // Run npm run dev for testing
+                sh 'npm run dev'
 
-            steps{
-                 sh 'npm run dev'
-                 echo 'success'
+                // Echo success message
+                echo 'Test success'
             }
         }
-    }
-}
+
+        stage('deploy') {
+            steps {
+                // Deployment steps
+            }
+        }
 
 
 
