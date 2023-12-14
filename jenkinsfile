@@ -8,25 +8,21 @@ pipeline {
     stages {
         stage('Install and Build') {
             steps {
-                script {
-                    // Install NVM
-                    sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
-                    sh 'export NVM_DIR="$HOME/.nvm"'
-                    sh '[ -s "$NVM_DIR/nvm.sh" ] && \."$NVM_DIR/nvm.sh"'
-                    sh '[ -s "$NVM_DIR/bash_completion" ] && \."$NVM_DIR/bash_completion"'
-
-                    // Install and use the specified Node.js version
-                    sh "nvm install ${NODE_VERSION}"
-                    sh "nvm use ${NODE_VERSION}"
-
-                    // Other build steps
-                    sh 'npm install'
-                    sh 'npm run dev'
-                }
+                 sh 'rm -rf node_modules'
+                 sh 'npm audit fix --force'
+                 sh 'npm install 20'
+                 sh 'npm audit fix --force'
+                 echo 'success'
             }
         }
 
-        // Add other stages as needed
+        stage ('test'){
+
+            steps{
+                 sh 'npm run dev'
+                 echo 'success'
+            }
+        }
     }
 }
 
