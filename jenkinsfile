@@ -1,98 +1,33 @@
-pipeline {
-    agent any
-
-    environment {
-        // Define the Node.js version
-        NODE_VERSION = '14'
-    }
-
+pipeline{
+    //Directives
+   agent any
     stages {
-        stage('Install Docker Plugins') {
-            steps {
-                script {
-                    // Install necessary Docker plugins
-                    def plugins = ['docker-workflow', 'docker-commons', 'docker-api']
-                    plugins.each { plugin ->
-                        if (!jenkins.model.Jenkins.instance.pluginManager.plugins.any { it.shortName == plugin }) {
-                            echo "Installing ${plugin} plugin..."
-                            jenkins.model.Jenkins.instance.pluginManager.install([plugin])
-                        } else {
-                            echo "${plugin} plugin already installed."
-                        }
-                    }
-                }
+        stage('build'){
+            steps{
+                sh 'rm -rf node_modules'
+                sh 'npm audit fix --force'
+                sh 'npm install 20'
+                sh 'npm audit fix --force'
+
+                echo 'success'
             }
         }
 
-        stage('Checkout Code') {
-            steps {
-                // Replace with your Git repository URL and credentials
-                git credentialsId: '0d50a39b-08db-4fe7-8e16-6b2af1d53532', url: 'https://github.com/Immutable-03/my-app'
-            }
-        }
+        stage ('test'){
 
-        stage('Install Node.js Dependencies') {
-            steps {
-                script {
-                    sh 'npm install'
-                }
-            }
-        }
-
-        stage('Run Tests') {
-            steps {
-                script {
-                    sh 'npm test'
-                }
-            }
-        }
-
-        stage('Build Application') {
-            steps {
-                script {
-                    // Add commands to build your application (if needed)
+            steps{
                  sh 'npm run dev'
-                }
+                 echo 'success'
             }
         }
 
-        stage('Pull Docker Image') {
+        stage ('deploy'){
+
             steps {
-                script {
-                    docker.image("node:${NODE_VERSION}").pull()
-                }
+                 echo "deploying"
             }
-        }
+        } 
 
-        stage('Build Docker Image') {
-            steps {
-                script {
-                    // Build Docker image based on the Dockerfile in your repository
-                    def customImage = docker.build("your-docker-image-name:latest")
-                }
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    // Replace with your Docker registry URL and credentials
-                    docker.withRegistry('https://your-docker-registry', 'credentials-id') {
-                        customImage.push('latest')
-                    }
-                }
-            }
-        }
-
-        // Add more stages as needed
     }
 
-    post {
-        always {
-            // Clean up: remove Docker containers after the pipeline finishes
-            script {
-                docker.image("node:${NODE_VERSION}").remove()
-            }
-        }
-    }
 }
