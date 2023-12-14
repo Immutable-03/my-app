@@ -12,7 +12,7 @@ pipeline {
                 sh 'npm audit fix --force'
 
                 // Install project dependencies
-                sh 'npm install'
+                sh 'npm install 20'
 
                 // Run npm audit fix again
                 sh 'npm audit fix --force'
