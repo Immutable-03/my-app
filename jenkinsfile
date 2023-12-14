@@ -1,45 +1,35 @@
 pipeline {
-    // Directives
     agent any
 
+    environment {
+        NODE_VERSION = '20'  // Update this to the version your project requires
+    }
+
     stages {
-        stage('build') {
+        stage('Install and Build') {
             steps {
-                // Remove existing node_modules directory
-                sh 'rm -rf node_modules'
+                script {
+                    // Install NVM
+                    sh 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash'
+                    sh 'export NVM_DIR="$HOME/.nvm"'
+                    sh '[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"'
+                    sh '[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"'
 
-                // Run npm audit fix with force option
-                sh 'npm audit fix --force'
+                    // Install and use the specified Node.js version
+                    sh "nvm install ${NODE_VERSION}"
+                    sh "nvm use ${NODE_VERSION}"
 
-                // Install project dependencies
-                sh 'npm install 20'
-
-                // Run npm audit fix again
-                sh 'npm audit fix --force'
-
-                // Echo success message
-                echo 'Build success'
+                    // Other build steps
+                    sh 'npm install'
+                    sh 'npm run dev'
+                }
             }
         }
 
-        stage('test') {
-            steps {
-                // Run npm run dev for testing
-                sh 'npm run dev'
-
-                // Echo success message
-                echo 'Test success'
-            }
-        }
-
-        stage('deploy') {
-            steps {
-                // Deployment steps go here
-                echo 'Deploying'
-            }
-        }
+        // Add other stages as needed
     }
 }
+
 
 
 
