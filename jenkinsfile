@@ -3,7 +3,8 @@ pipeline {
     agent any
 
     environment {
-        NODE_VERSION = '20'  // Update this to the version your project requires
+        NODE_VERSION = '20.10.0'  // Update this to the version your project requires
+        NPM_VERSION = '10.2.3'
     }
 
     stages {
