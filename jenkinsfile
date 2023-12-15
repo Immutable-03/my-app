@@ -18,14 +18,15 @@ pipeline {
 
                 // Install project dependencies
                 sh 'npm install'
-                sh "npm install Next.js 13.5.2"
 
                 // Run npm audit fix again
                 sh 'npm audit fix --force'
+                sh 'npm update'
 
                 // Echo success message
                 echo 'Build success'
                 sh 'npm run dev'
+                
             }
         }
 
