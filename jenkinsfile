@@ -1,53 +1,98 @@
 pipeline {
-    // Directives
-    agent any
+  agent any
 
-    environment {
-        NODE_VERSION = '20.10.0'  // Update this to the version your project requires
-        NPM_VERSION = '10.2.3'
+  stages {
+    stage('Install Dependencies') {
+      steps {
+        script {
+          echo "sss"
+          sh 'npm install'
+        }
+      }
     }
 
-    stages {
-        stage('build') {
-            steps {
-                // Remove existing node_modules directory
-                sh 'rm -rf node_modules'
-
-                // Run npm audit fix with force option
-                sh 'npm audit fix --force'
-
-                // Install project dependencies
-                sh 'npm install'
-
-                // Run npm audit fix again
-                sh 'npm audit fix --force'
-                sh 'npm update'
-
-                // Echo success message
-                echo 'Build success'
-                sh 'npm run dev'
-                
-            }
+    stage('Build') {
+      steps {
+        script {
+          sh 'npm run build'
         }
-
-        stage('test') {
-            steps {
-                // Run npm run dev for testing
-                // sh 'npm run dev'
-
-                // Echo success message
-                echo 'Test success'
-            }
-        }
-
-        stage('deploy') {
-            steps {
-                echo "deploy success"
-            }
-        }
-
+      }
     }
+
+    stage('deploy') {
+            steps {
+              // bat "aws configure set region $AWS_DEFAULT_REGION" 
+              sh "aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID"  
+              sh "aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY"
+              // bat "aws s3 cp ivica/index.html s3://ivica"
+              sh 'aws s3 sync build/ s3://react-app-deployment'
+            }
+        }
+  }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+// pipeline {
+//     // Directives
+//     agent any
+
+//     environment {
+//         NODE_VERSION = '20.10.0'  // Update this to the version your project requires
+//         NPM_VERSION = '10.2.3'
+//     }
+
+//     stages {
+//         stage('build') {
+//             steps {
+//                 // Remove existing node_modules directory
+//                 sh 'rm -rf node_modules'
+
+//                 // Run npm audit fix with force option
+//                 sh 'npm audit fix --force'
+
+//                 // Install project dependencies
+//                 sh 'npm install'
+
+//                 // Run npm audit fix again
+//                 sh 'npm audit fix --force'
+//                 sh 'npm update'
+
+//                 // Echo success message
+//                 echo 'Build success'
+//                 sh 'npm run dev'
+                
+//             }
+//         }
+
+//         stage('test') {
+//             steps {
+//                 // Run npm run dev for testing
+//                 // sh 'npm run dev'
+
+//                 // Echo success message
+//                 echo 'Test success'
+//             }
+//         }
+
+//         stage('deploy') {
+//             steps {
+//                 echo "deploy success"
+//             }
+//         }
+
+//     }
+// }
 
 
 
